@@ -16,7 +16,7 @@ const News = () => {
 
     setLoading(true)
     fetchTeamArticles(team.id)
-      .then(articles => setArticles(articles))
+      .then(articles => setArticles(articles || []))
       .finally(() => setLoading(false))
 
   }, [])
@@ -28,6 +28,7 @@ const News = () => {
     <ScrollView>
 
       <View style={s.container}>
+        
         {
           articles.map((article, i) => (
             <ArticleCard key={i} article={article} />

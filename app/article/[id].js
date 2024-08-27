@@ -1,18 +1,23 @@
-import { Dimensions, Image, Linking, ScrollView, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useGlobalSearchParams, useRouter } from 'expo-router'
-import { fetchArticle } from '../../utils/fetch'
+import { useGlobalSearchParams, useLocalSearchParams, useRouter } from 'expo-router'
 import { ActivityIndicator, IconButton } from 'react-native-paper'
-import Colors from '../../constants/Colors'
-import VideoCard from '../../components/game/VideoCard'
+
+
+
+
+import { fetchArticle } from '../../utils/fetch'
 import { convertTimestamp } from '../../utils/time'
+import VideoCard from '../../components/game/VideoCard'
+import Colors from '../../constants/Colors'
 
 
 const ArticlePage = () => {
 
-    const { id } = useGlobalSearchParams()
+    const { id } = useLocalSearchParams()
     const [article, setArticle] = useState(false)
     const [loading, setLoading] = useState(true)
+    
     const [error, setError] = useState(false)
     const { push, back } = useRouter()
     const published = `${convertTimestamp(article.published).dayOfWeek} ${convertTimestamp(article.published).day} de ${convertTimestamp(article.published).month} de ${convertTimestamp(article.published).year}, ${convertTimestamp(article.published).time}hs`
@@ -21,12 +26,37 @@ const ArticlePage = () => {
 
     useEffect(() => {
 
-        fetchArticle(id)
-            .then(article => { setArticle(article) })
-            .catch(error => setError(error.message))
-            .finally(() => setLoading(false))
+        if (id) {
 
-    }, [])
+            fetchArticle(id)
+                .then(resp => {setArticle(resp.headlines[0])})
+                .catch(error => setError(error))
+                .finally(() => setLoading(false))
+        }
+
+        // if()
+
+        // if (param.id === "1") {
+
+        //     setArticle(JSON.parse(JSON.stringify(param.article)))
+
+
+        // } else if (param.id) {
+
+        //     fetchArticle(article.id)
+        //         .then(resp => {
+
+        //             setArticle(resp)
+        //         })
+        //         .catch(error => setError(error))
+        //         .finally(() => setLoading(false))
+        // }
+
+    }, [id])
+
+
+
+
 
     const getTagRoute = (category) => {
 
@@ -93,11 +123,15 @@ const ArticlePage = () => {
         return text;
     }
 
+
+
     if (loading)
-        return <ActivityIndicator size={22} color='white' style={{ marginTop: 20 }} />
+        return (
+            <ActivityIndicator size={22} color='white' style={{ marginTop: 20 }} />
+        )
 
     if (error)
-        return <Text style={s.error}>Ha ocurrido un error</Text>
+        return <Text style={s.error}>Ha ocurrido un error: {error.message} </Text>
 
     return (
         <ScrollView>
@@ -111,16 +145,28 @@ const ArticlePage = () => {
             <View style={s.container}>
 
                 <Text style={s.headline}>{article.headline}</Text>
-                <Text style={s.description}>{article.description}</Text>
                 <Text style={s.published}>{published}</Text>
+                <Text style={s.description}>{article.description}</Text>
 
                 <View style={s.images}>
                     {
-                        "images" in article && article.images.filter(img => img.type === "header" || img.type === "inline").map((image, i) => (
-                            <View key={i} style={s.img}>
-                                <Image key={i} source={{ uri: image.url }} width={Dimensions.get('window').width - 8} height={Dimensions.get('window').width / 2} />
-                            </View>
-                        ))
+                        "images" in article && article.images
+                            // .filter(img => img.type === "header" || img.type === "inline" || !"type" in img)
+                            .map((image, i) => (
+                                <View key={i}>
+                                    <View style={s.img}>
+                                        <Image key={i} source={{ uri: image.url }} width={Dimensions.get('window').width - 8} height={Dimensions.get('window').width / 2} />
+
+                                    </View>
+                                    {
+                                        "caption" in image &&
+                                        <Text style={s.caption}>
+                                            {image.caption.replace("<p>", "").replace("</p>", "")}
+                                        </Text>
+                                    }
+                                </View>
+
+                            ))
                     }
                 </View>
 
@@ -135,18 +181,20 @@ const ArticlePage = () => {
                     </View>
                 }
 
-
                 <Text style={s.source}>En esta noticia:</Text>
                 <View style={s.tags}>
                     {
                         "categories" in article &&
-                        article.categories.map((cat, i) => (
-                            <TouchableNativeFeedback key={i} onPress={() => push(getTagRoute(cat))}>
-                                <View>
-                                    <Text style={s.tag}>{cat.description}</Text>
-                                </View>
-                            </TouchableNativeFeedback>
-                        ))
+                        article.categories.map((cat, i) => {
+                            return cat.description && (
+                                <TouchableNativeFeedback key={i} onPress={() => push(getTagRoute(cat))}>
+                                    <View>
+                                        <Text style={s.tag}>{cat.description}</Text>
+                                    </View>
+                                </TouchableNativeFeedback>
+                            )
+                        }
+                        )
                     }
                 </View>
 
@@ -207,10 +255,10 @@ const s = StyleSheet.create({
         marginBottom: 200
     },
     published: {
-        fontSize: 14,
+        fontSize: 12,
         padding: 7,
         fontStyle: "italic",
-        color: Colors.text100,
+        color: Colors.text,
     },
     headline: {
         fontSize: 28,
@@ -223,7 +271,7 @@ const s = StyleSheet.create({
 
         color: "#d4d3d3",
         fontSize: 17,
-        lineHeight: 22,
+        lineHeight: 20,
         textAlign: "justify",
         padding: 7,
         paddingBottom: 12
@@ -288,7 +336,7 @@ const s = StyleSheet.create({
         borderStyle: "dashed",
     },
     articleContainer: {
-        marginVertical: 12,
+        marginVertical: 18,
         marginHorizontal: 7
 
     },
@@ -344,4 +392,10 @@ const s = StyleSheet.create({
         fontStyle: 'italic',
         color: Colors.text,
     },
+    caption: {
+        margin: 5,
+        fontStyle: "italic",
+        color: Colors.text100,
+        fontSize: 11
+    }
 })

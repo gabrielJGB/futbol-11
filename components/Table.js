@@ -92,7 +92,7 @@ const Table = ({ entries, awayId, homeId }) => {
 
             {
                 entries.map((team, i) => (
-                    <DataTable.Row key={i} style={[s.row, {backgroundColor: homeId?highlight_team(typeof (team.team) === "object" ? team.team.id : team.id):Colors.highlight }]}>
+                    <DataTable.Row key={i} style={[s.row, {backgroundColor: homeId?highlight_team(typeof (team.team) === "object" ? team.team.id : team.id):Colors.card }]}>
 
                         <DataTable.Cell style={{ flex: 1, borderRightWidth: 1, borderColor: Colors.border }}>
 

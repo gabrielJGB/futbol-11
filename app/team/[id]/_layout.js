@@ -79,6 +79,7 @@ const TeamLayout = () => {
             selectedSeason, setSelectedSeason,
 
         }}>
+            
             <Tabs
                 screenOptions={{
 
@@ -114,7 +115,7 @@ const TeamLayout = () => {
                 <Tabs.Screen
                     name='news'
                     options={{
-                        href: "news" in team ? "team/[id]/news" : null,
+                        href: "team/[id]/news",
                         title: 'Noticias',
                         tabBarIcon: ({ color }) => <Icon source="newspaper-variant" size={ICON_SIZE} color={color} />,
 

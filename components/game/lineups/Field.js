@@ -95,7 +95,7 @@ const Field = () => {
 
         <ScrollView horizontal>
 
-            {/* {console.log(rosterHome.)} */}
+            
 
             {
                 [0, 1].map((i, k) => (

@@ -30,6 +30,7 @@ export const getLogo = (team_p, SIZE) => {
         let team = "team" in team_p ? team_p.team : team_p
 
         if (typeof (team) === "object" && "logo" in team && Array.isArray(team.logo)) {
+            
             logo = team.logo[0].href
             logo = logo.replace("https://a.espncdn.com/i", `https://a1.espncdn.com/combiner/i?img=/i`)
             logo += `&h=${SIZE + p}&w=${SIZE + p}`
@@ -45,7 +46,7 @@ export const getLogo = (team_p, SIZE) => {
         }
 
         if (typeof (team) === "object" && "logos" in team && team.logos.length > 0) {
-
+            
             logo = team.logos.length > 1 ? team.logos[1].href : team.logos[0].href
             logo = logo.replace("https://a.espncdn.com/i", `https://a1.espncdn.com/combiner/i?img=/i`)
             logo += `&h=${SIZE + p}&w=${SIZE + p}`
@@ -61,8 +62,9 @@ export const getLogo = (team_p, SIZE) => {
     return <></>
 }
 
-export const getStatus = (elem, date) => {
+export const getStatus = (elem, date, id) => {
     let status = elem.name
+
 
     switch (status) {
 
@@ -70,11 +72,14 @@ export const getStatus = (elem, date) => {
             return convertTimestamp(date).time;
 
         case "STATUS_FIRST_HALF":
-            return `${elem.detail}`
-            // return `${elem.detail} PT`
-
         case "STATUS_SECOND_HALF":
             return `${elem.detail}`
+
+
+
+
+            // return `${elem.detail} PT`    
+            // return `${elem.detail}`
             // return `${parseInt(elem.detail) - 45}' ST`
 
 
@@ -121,7 +126,7 @@ export const getStatus = (elem, date) => {
 
 export const translateTitle = (title) => {
 
-    title = title.replace("Argentine", "").replace(",", " -").replace("2024", "")
+    title = title.replace("Argentine", "").replace(",", " -")
     title = title.replace("Round of 64", "32avos de final")
     title = title.replace("Round of 32", "16avos de final")
     title = title.replace("Round of 16", "Octavos de final")
@@ -161,7 +166,7 @@ export const getSofaData = async (selectedDate) => {
         const sofaDate = convertTimestamp(selectedDate)
         const formatedDate = `${sofaDate.year}-${sofaDate.monthNum}-${sofaDate.day.toString().padStart(2, '0')}`
 
-     
+
         const data = await fetch_URL(`https://api.sofascore.com/api/v1/sport/football/scheduled-events/${formatedDate}`)
             .then(resp => resp.events.map(game => {
                 return { id: game.id, homeTeam: game.homeTeam, awayTeam: game.awayTeam }
@@ -198,7 +203,7 @@ export const getSofaId = (game, sofaEvents) => {
                 event.awayTeam.nameCode.toLowerCase().trim() === away.abbreviation.toLowerCase().trim())
         ) || false
 
-        
+
 
         return (respId ? respId.id : false)
     }
@@ -476,8 +481,8 @@ export const translateStatLabel = (label) => {
 export const sortRoster = (roster) => {
 
     // const order = ["G", "LI", "DCI", "DC", "DCD", "LD", "MI", "MCI", "MCD", "MD", "MO", "MI", "MCI", "MC", "MO", "MCD", "MD", "ACI", "ACD", "AI", "ACI", "A", "ACD", "AD"];
- 
-    const order = ["G", "LI", "DCI","D", "DC", "DCD", "LD","L", "MI", "MCI", "MC", "MO", "MCD", "MD","M","AI", "ACI", "A", "ACD","AD"];
+
+    const order = ["G", "LI", "DCI", "D", "DC", "DCD", "LD", "L", "MI", "MCI", "MC", "MO", "MCD", "MD", "M", "AI", "ACI", "A", "ACD", "AD"];
 
 
     // const order = ["G", "LI", "DCI", "DC", "DCD", "LD", "MI","MD","MI","MO","MD","A"]

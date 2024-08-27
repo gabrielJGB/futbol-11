@@ -10,28 +10,43 @@ const ArticleCard = ({ article }) => {
 
     const published = `${convertTimestamp(article.published).dayOfWeek} ${convertTimestamp(article.published).day} de ${convertTimestamp(article.published).month} de ${convertTimestamp(article.published).year}, ${convertTimestamp(article.published).time}hs`
 
-    const handlePress = ()=>{
 
-        const url = article.links.api.news.href
-        const match = url.match(/\/(\d+)\?/)
-        const id = match && match[1] ? match[1] : null
 
+    const handlePress = () => {
+
+
+        let id = false
+        let type = article.type
+        
+        
+        if ("id" in article) {
+            // team || player
+            id = article.id
+
+        } else {
+            // league
+            const url = article.links.api.news.href
+            const match = url.match(/\/(\d+)\?/)
+            id = match && match[1] ? match[1] : null
+        }
         
 
-
-        if(id && article.type === "dStory"){
-            push(`article/${id}`)
-        }else if (id && article.type === "Media"){
+        if (type === "Media") {
             push(`video/${id}`)
-        }else{
-            return 
+
         }
+        else if (type === "dStory") {
+            push(`article/${id}`)
+
+        }
+        else 
+            return ;
 
     }
 
 
     return (
-        <TouchableNativeFeedback onPress={handlePress}>
+        <TouchableNativeFeedback onPress={() => handlePress()}>
             <View style={s.container}>
                 {
                     "images" in article && article.images.length &&

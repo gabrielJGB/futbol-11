@@ -1,9 +1,9 @@
-import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TouchableNativeFeedback, TouchableOpacity, View } from 'react-native'
 import React, { memo } from 'react'
 import TeamCard from './TeamCard'
 import Colors from '../../constants/Colors'
 import { useRouter } from 'expo-router'
-import { Icon } from 'react-native-paper'
+import { Icon, TouchableRipple } from 'react-native-paper'
 import { gamePlaying, getStatus, translateTitle } from '../../utils/match'
 import { useStateContext } from '../../context/StateContext'
 
@@ -51,7 +51,10 @@ const GameCard = ({ game, league, status }) => {
 
 // { display: showOnlyPlaying && !gamePlaying(league) ?"none":"flex"}
     return (
-        <TouchableNativeFeedback
+        <TouchableRipple
+            unstable_pressDelay={80}
+            rippleColor="grey"
+            borderless
             onPress={() => router.push(`/game/${game.item.id}`)}
         >
         
@@ -71,8 +74,9 @@ const GameCard = ({ game, league, status }) => {
                         <TeamCard team={away} isWinner={isFinished && away.winner} isPre={false}/>
                     </View>
                     <View style={s.gameStatus}>
+
                         <Text style={[s.gameStatusText, getStatusStyle(status.type.state)]}>
-                            {getStatus(status.type, game.item.date)}
+                            {getStatus(status.type, game.item.date,false)}
                         </Text>
 
 
@@ -91,7 +95,7 @@ const GameCard = ({ game, league, status }) => {
 
             </View>
 
-        </TouchableNativeFeedback>
+        </TouchableRipple>
     )
 }
 

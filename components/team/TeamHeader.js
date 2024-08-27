@@ -18,8 +18,10 @@ const TeamHeader = () => {
         selectedSeason,
         setSelectedSeason
     } = useStateContext()
-    
-    if(!team)
+
+    const summary = "standingSummary" in team && team.standingSummary
+
+    if (!team)
         return <ActivityIndicator size={20} color='white' />
 
     return (
@@ -28,8 +30,16 @@ const TeamHeader = () => {
             <View style={s.backView}>
                 <IconButton icon="arrow-left" iconColor='white' size={22} onPress={() => back()} />
                 <View style={s.teamName}>
-                    {getLogo(team, 22)}
-                    <Text style={s.screenTitle}> {team.displayName} </Text>
+                    <View style={s.img}>
+                        {getLogo(team, 34)}
+                    </View>
+                    <View style={s.teamInfo}>
+                        <Text style={s.screenTitle}>{team.displayName}</Text>
+                        {
+                            summary &&
+                        <Text style={s.summary}>{summary}</Text>
+                        }
+                    </View>
                 </View>
             </View>
 
@@ -46,13 +56,13 @@ const TeamHeader = () => {
                     onValueChange={(itemValue, itemIndex) => { setSelectedLeague(itemValue) }
 
                     }>
-                       
+
                     {
                         leagues?.map((league, i) => (
                             <Picker.Item
                                 key={i}
                                 color='black'
-                                label={`${league.name.replace("Argentine", "").replace("Amistoso","Amistosos")}`}
+                                label={`${league.name.replace("Argentine", "").replace("Amistoso", "Amistosos")}`}
                                 value={league.slug}
 
                             />
@@ -71,11 +81,11 @@ const TeamHeader = () => {
                     onValueChange={(itemValue, itemIndex) => { setSelectedSeason(itemValue) }}
 
                 >
-                    
+
                     {
-                        Array.from({ length: (new Date().getFullYear()+1) - 2000 }, (_, index) => new Date().getFullYear() - index).map((a, i) => (
+                        Array.from({ length: (new Date().getFullYear() + 1) - 2000 }, (_, index) => new Date().getFullYear() - index).map((a, i) => (
                             <Picker.Item key={i} color='black' label={`${a}/${String(a + 1).slice(2)}`} value={a} />
-                            
+
 
                         ))
                     }
@@ -93,8 +103,8 @@ const s = StyleSheet.create({
     mainContainer: {
         display: "flex",
         flexDirection: "column",
-        borderBottomWidth:1,
-        borderBottomColor:Colors.background
+        borderBottomWidth: 1,
+        borderBottomColor: Colors.background
     },
     backView: {
         width: "100%",
@@ -106,8 +116,9 @@ const s = StyleSheet.create({
         backgroundColor: Colors.card
     },
     screenTitle: {
+        // maxWidth:"88%",
         color: Colors.text,
-        fontSize: 21,
+        fontSize: 20,
         fontWeight: "500"
     },
     container: {
@@ -119,8 +130,11 @@ const s = StyleSheet.create({
     teamName: {
         display: "flex",
         flexDirection: "row",
+        justifyContent:"center",
         alignItems: "center",
-        gap: 4
+        gap: 6,
+        maxWidth:"80%",
+        
     },
     competitionPicker: {
         width: "62%",
@@ -133,6 +147,21 @@ const s = StyleSheet.create({
 
     },
 
+    summary: {
+        textAlign: "center",
+        color: Colors.text100,
+        fontSize: 10,
+        fontWeight: "500",
+    },
+    teamInfo: {
+        flexDirection: "column",
+        justifyContent:"center",
+        alignItems:"flex-start",
+        
+    },
+    img:{
+        
+    }
 
 
 

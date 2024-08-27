@@ -90,8 +90,9 @@ const s = StyleSheet.create({
     color: Colors.text
   },
   participant: {
+    maxWidth:"85%",
     color: Colors.text,
-    fontSize: 12,
+    fontSize: 11,
     textAlign: "center"
   },
   button: {

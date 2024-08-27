@@ -59,6 +59,7 @@ const Fixture = () => {
 
 
   const summary = "standingSummary" in team && team.standingSummary
+  const seasonText = `${selectedSeason}/${parseInt(selectedSeason) + 1}`
 
   useEffect(() => {
 
@@ -99,21 +100,9 @@ const Fixture = () => {
 
       <View style={s.container}>
 
+        <Text style={s.leagueName}>{selectedLeague != "all" ? selectedLeagueName : `Temporada ${seasonText}`}</Text>
 
-        {
-          selectedLeague != "all" ?
-            <Button
-              style={s.button}
-              onPress={() => { push(`/league/${selectedLeague}`) }}
-              mode='elevated'
-              buttonColor='black'
-              textColor='white'
-              rippleColor='white'
-            > {selectedLeagueName}</Button>
-            :
-            <Text style={s.leagueName}>Temporada {`${selectedSeason}/${parseInt(selectedSeason)+1}`}</Text>
 
-        }
 
 
 
@@ -149,7 +138,18 @@ const Fixture = () => {
         </View>
 
 
+        {
+          selectedLeague != "all" &&
+          <Button
+            style={s.button}
+            onPress={() => { push(`/league/${selectedLeague}`) }}
+            mode='elevated'
+            buttonColor='black'
+            textColor='white'
+            rippleColor='white'
+          >Ir a la sección del torneo</Button>
 
+        }
 
 
       </View>
@@ -169,20 +169,20 @@ const s = StyleSheet.create({
     marginBottom: 100
   },
   leagueName: {
-    paddingVertical:9,
+
     color: Colors.text,
     textAlign: "center",
     fontWeight: "500",
     fontSize: 18,
-    marginVertical: 9
+    marginVertical: 12
   },
   button: {
-    borderWidth:1,
-    borderColor:Colors.card100,
+    borderWidth: 1,
+    borderColor: Colors.card100,
     borderRadius: 7,
     marginHorizontal: 10,
-    marginVertical:16,
-    width:"95%"
+    marginVertical: 16,
+    width: "95%"
   },
   gameContainer: {
     display: "flex",
@@ -214,7 +214,7 @@ const s = StyleSheet.create({
   summary: {
     textAlign: "center",
     color: Colors.text100,
-    marginBottom: 8
+    marginBottom: 12
   }
 
 })

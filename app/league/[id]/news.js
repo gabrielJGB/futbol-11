@@ -32,7 +32,7 @@ const News = () => {
 
       <View style={s.container}>
         {
-          articles.filter(ar => ar.type === 'Media').map((article, i) => (
+          articles.map((article, i) => (
             <ArticleCard key={i} article={article} />
           ))
         }

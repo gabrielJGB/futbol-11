@@ -2,10 +2,11 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Colors from '../../constants/Colors'
 import { getStatus } from '../../utils/match'
+import { useStateContext } from '../../context/StateContext'
 
 const GameHeaderScore = ({ homeWinner, awayWinner, score, shootout, status, date, headerFull }) => {
 
-
+  const { sofaId } = useStateContext()
   const getStatusStyle = state => {
 
 
@@ -47,7 +48,7 @@ const GameHeaderScore = ({ homeWinner, awayWinner, score, shootout, status, date
       {
 
         <Text style={[s.status, getStatusStyle(status.state), headerFull ? s.statusFull : s.statusMin]} >
-          {getStatus(status, date)}
+          {getStatus(status, date, sofaId)}
         </Text>
 
       }
@@ -82,7 +83,7 @@ const s = StyleSheet.create({
   shootout: {
     color: Colors.text,
     fontSize: 14,
-    marginBottom:3
+    marginBottom: 3
   },
   statusMin: {
     fontSize: 11

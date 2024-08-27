@@ -16,6 +16,7 @@ export default function MatchLayout() {
     const [game, setGame] = useState(null)
     const [sofaId, setSofaId] = useState(null)
     const [isFinished, setIsFinished] = useState(true)
+    const [isPlaying,setisPlaying] = useState(false)
     const [error, setError] = useState(false)
     const { sofaEvents } = useApp()
     const { id } = useGlobalSearchParams();
@@ -32,6 +33,7 @@ export default function MatchLayout() {
                 setGame(gameData)
                 setSofaId(getSofaId(gameData.game, sofaEvents))
                 setIsFinished(gameData.game.header.competitions[0].status.type.state === "post")
+                setisPlaying(gameData.game.header.competitions[0].status.type.state === "in")
 
             })
             .catch(error => setError(error.message))
@@ -46,12 +48,13 @@ export default function MatchLayout() {
             setSofaId(null)
             _fetchGame()
 
+        
             if (!isFinished) {
-                console.log("Game has not finished")
                 _fetchGame()
-                _fetchGame()
+                
 
                 const intervalId = setInterval(() => {
+                    _fetchGame()
                     _fetchGame()
 
                 }, 1000 * 30)

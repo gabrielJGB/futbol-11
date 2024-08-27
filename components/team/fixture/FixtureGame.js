@@ -17,8 +17,6 @@ const FixtureGame = ({ game, team, n }) => {
   const homeAway = _team.homeAway === "home" ? "L" : "V"
   const result = _team.winner ? "G" : (rival.winner ? "P" : "E")
   const score = "score" in _team ? `${_team.score.displayValue}-${rival.score.displayValue}` : false
-
-
   const leagueName = game.league.name.replace("Argentine", "")
   const gameStage = translateTitle(game.seasonType.name).trim()
   const gameTime = convertTimestamp(game.date).DDMMYYYY

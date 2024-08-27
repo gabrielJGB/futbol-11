@@ -1,14 +1,16 @@
-import { View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native'
+import { View, Text, StyleSheet, TouchableNativeFeedback, TouchableOpacity, Pressable, Dimensions } from 'react-native'
 import React from 'react'
 import colors from '../../constants/Colors'
 import { formatDateObject, isSameDay } from '../../utils/time'
-import { Button } from 'react-native-paper'
+import { Button, IconButton } from 'react-native-paper'
 import Colors from '../../constants/Colors'
 import { useStateContext } from '../../context/StateContext'
+import { useRouter } from 'expo-router'
 
 
 const HomeHeader = ({ selectedDate, setSelectedDate }) => {
 
+    const { push } = useRouter()
     const previousDate = new Date(selectedDate.getTime() - 86400000)
     const nextDate = new Date(selectedDate.getTime() + 86400000)
     const { showOnlyPlaying, setShowOnlyPlaying } = useStateContext()
@@ -16,26 +18,33 @@ const HomeHeader = ({ selectedDate, setSelectedDate }) => {
     return (
         <View style={s.container}>
             <View style={s.header}>
-                <Text style={s.headerTitle}>Fútbol 11</Text>
+                <IconButton
+                    icon="magnify"
+                    iconColor='white'
+                    style={{ marginVertical: 0, marginRight:20,marginLeft:0, padding: 0 }}
+                    size={25}
+                    onPress={() => push("search")}
+                />
+                <Text style={s.headerTitle}>FÚTBOL 11</Text>
 
                 {
                     isSameDay(selectedDate, new Date()) ?
                         <Button
                             mode="outlined" labelStyle={{ marginVertical: 5, marginHorizontal: 0 }}
-                            
+
                             textColor='white'
                             rippleColor="red"
                             style={[s.liveButton, showOnlyPlaying ? s.on : s.off]}
                             onPress={() => setShowOnlyPlaying(!showOnlyPlaying)}
                         >En vivo</Button>
                         :
-                        <View></View>
+                        <View style={{width:54}}></View>
                 }
 
             </View>
             <View style={s.buttons}>
 
-                <TouchableNativeFeedback onPress={() => setSelectedDate(previousDate)}>
+                <Pressable android_ripple={{ color: "white", }} onPress={() => setSelectedDate(previousDate)}>
                     <View style={s.button}>
                         <Text style={s.buttonText}>
 
@@ -43,7 +52,7 @@ const HomeHeader = ({ selectedDate, setSelectedDate }) => {
 
                         </Text>
                     </View>
-                </TouchableNativeFeedback>
+                </Pressable>
 
 
                 <View style={[s.button, s.centerButton]}>
@@ -55,7 +64,7 @@ const HomeHeader = ({ selectedDate, setSelectedDate }) => {
                 </View>
 
 
-                <TouchableNativeFeedback onPress={() => setSelectedDate(nextDate)}>
+                <Pressable android_ripple={{ color: "white" }} onPress={() => setSelectedDate(nextDate)}>
                     <View style={s.button}>
                         <Text style={s.buttonText}>
 
@@ -63,7 +72,7 @@ const HomeHeader = ({ selectedDate, setSelectedDate }) => {
 
                         </Text>
                     </View>
-                </TouchableNativeFeedback>
+                </Pressable>
 
             </View>
         </View>
@@ -91,10 +100,11 @@ const s = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         padding: 10,
+        width: "100%",
     },
     headerTitle: {
-        fontSize: 18,
-        fontWeight: "500",
+        fontSize: 16,
+        fontWeight: "bold",
         color: colors.text
     },
     buttons: {
@@ -110,7 +120,7 @@ const s = StyleSheet.create({
 
     },
     button: {
-        width: "33%",
+        width: Dimensions.get("window").width / 3,
         paddingVertical: 12,
         borderColor: "transparent",
         borderBottomWidth: 2,

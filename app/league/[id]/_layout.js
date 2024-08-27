@@ -21,7 +21,7 @@ const LeagueLayout = () => {
         console.log(`Fetching league ${id}...`)
 
         fetchLeague(id)
-            .then(resp => setLeague({ ...resp, slug: id }))
+            .then(resp => { setLeague({ ...resp, slug: id }) })
             .catch(error => setError(error))
             .finally(() => setLoading(false))
 
@@ -91,7 +91,7 @@ const LeagueLayout = () => {
                 <Tabs.Screen
                     name='positions'
                     options={{
-                        href: "standings" in league ? "league/[id]/positions" : null,
+                        href: "standings" in league && league.standings ? "league/[id]/positions" : null,
                         title: 'Posiciones',
                         tabBarIcon: ({ color }) => <Icon source="table-large" size={ICON_SIZE} color={color} />,
 

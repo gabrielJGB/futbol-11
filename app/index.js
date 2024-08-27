@@ -55,19 +55,20 @@ const Home = () => {
   useFocusEffect(
     useCallback(() => {
       // push("game/717399")
-      // push("team/5?season=2024")
-      // push("league/conmebol.sudamericana")
+      // push("team/83?season=2024")
+      // push("league/arg.1")
       // push("player/380084")
+      // push("test") 
 
 
       if (isSameDay(selectedDate, new Date())) {
         _fetchAllLeagues(false)
-        _fetchAllLeagues(false)
-
+        // _fetchAllLeagues(false)
         // _fetchAllLeagues(false)
         // _fetchAllLeagues(false)
 
         const intervalId = setInterval(() => {
+          _fetchAllLeagues(false)
           _fetchAllLeagues(false)
 
         }, 1000 * 30)
@@ -132,7 +133,7 @@ const Home = () => {
             refreshing={loading ? true : false}
             ListHeaderComponent={() => (<Text style={s.top}></Text>)}
             ListFooterComponent={() => (<Text style={s.footer}></Text>)}
-            ListEmptyComponent={() => <Text style={s.empty}>...</Text>}
+            // ListEmptyComponent={() => <Text style={s.empty}>...</Text>}
             removeClippedSubviews
             initialNumToRender={6}
             windowSize={10}

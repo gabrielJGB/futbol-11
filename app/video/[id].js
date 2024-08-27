@@ -1,23 +1,31 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useGlobalSearchParams, useLocalSearchParams, useRouter } from 'expo-router'
-import { fetchVideo } from '../../utils/fetch'
 import { ActivityIndicator, IconButton } from 'react-native-paper'
-import VideoCard from '../../components/game/VideoCard'
 import Colors from '../../constants/Colors'
+import VideoCard from '../../components/game/VideoCard'
+import { fetchVideo } from '../../utils/fetch'
+
 
 const VideoPage = () => {
-    const { id } = useGlobalSearchParams()
+    // const { id } = useGlobalSearchParams()
     const [video, setVideo] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(false)
     const { back } = useRouter()
+    const { id } = useLocalSearchParams()
 
     useEffect(() => {
-        fetchVideo(id)
-            .then(res => setVideo(res))
-            .finally(() => setLoading(false))
 
-    }, [])
+        if (id) {
+
+            fetchVideo(id)
+                .then(res => { setVideo(res) })
+                .catch(error => setError(error.message))
+                .finally(() => setLoading(false))
+
+        }
+    }, [id])
 
     if (loading)
         return (
@@ -27,19 +35,23 @@ const VideoPage = () => {
         )
 
 
+    if (error)
+        return <Text style={s.error}> {`Error: ${error}\n\nVideo state: ${JSON.stringify(video)}\n\nVideo url: ${parsedArticle.links.api.self.href}\n\nArticle:${article ? "true" : "false"}`}</Text>
+
+
     return (
         <View style={s.container}>
             <View style={s.backView}>
                 <IconButton icon="arrow-left" iconColor='white' size={22} onPress={() => back()} />
-                <Text style={s.pageTitle}>Video</Text>
+                <Text style={s.pageTitle}></Text>
             </View>
             {
-                !video ?
-                    <Text style={s.error}>Error al obtener el video</Text>
-                    :
-                    <View style={s.video}>
-                        <VideoCard video={video} />
-                    </View>
+                // !video ?
+                //     <Text style={s.error}>Error al obtener el video</Text>
+                //     :
+                <View style={s.video}> 
+                    <VideoCard video={video} />
+                </View>
             }
         </View>
     )
@@ -57,26 +69,26 @@ const s = StyleSheet.create({
         marginTop: 40
     },
     video: {
-        marginHorizontal:4,
+        marginHorizontal: 4,
         backgroundColor: Colors.card,
     },
     backView: {
-        display:"flex",
-        flexDirection:"row",
-        alignItems:"center",
-        gap:5,
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 5,
         backgroundColor: Colors.card,
         paddingVertical: 0,
     },
-    error:{
-        color:Colors.text,
-        padding:7,
-        textAlign:"center",
-        fontSize:15
+    error: {
+        color: Colors.text,
+        padding: 7,
+        textAlign: "center",
+        fontSize: 15
     },
-    pageTitle:{
-        color:Colors.text,
-        fontWeight:"500",
-        fontSize:16
+    pageTitle: {
+        color: Colors.text,
+        fontWeight: "500",
+        fontSize: 16
     }
 })

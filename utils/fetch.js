@@ -4,10 +4,12 @@ import { convertTimestamp } from "./time"
 export const fetch_URL = async (URL) => {
     const time = new Date().getTime()
     const res = await fetch(`${URL}&_=${time}`, {
-        headers: {
-            'Cache-Control': 'no-store'
+        "headers": {
+            "sec-fetch-site": "none",
+            "sec-fetch-user": "?1",
         }
-    })
+    }
+    )
     const data = await res.json()
     return data
 
@@ -149,15 +151,24 @@ export const fetchTeamRoster = async (teamId, season, leagueSlug) => {
 export const fetchArticle = async (id) => {
 
     const res = await fetch_URL(`http://now.core.api.espn.com/v1/sports/news/${id}?lang=es`)
-    const article = "headlines" in res ? res.headlines[0] : res
-    return article
+    return res
 
 }
 
 export const fetchVideo = async (id) => {
 
-    const res = await fetch_URL(`http://api-app.espn.com/v1/video/clips/${id}?lang=es`)
-    return "videos" in res && res.videos.length > 0 ? res.videos[0] : false
+    try {
+        const res = await fetch_URL(`https://api-app.espn.com/v1/video/clips/${id}?lang=es`)
+
+        if ("videos" in res && res.videos.length > 0)
+            return res.videos[0]
+
+        else
+            throw Error("No se pudo obtener el video")
+
+    } catch (error) {
+        throw error
+    }
 
 }
 
@@ -307,9 +318,27 @@ export const fetchPlayer = async (id) => {
 
         let gamesResults = events.map(e => e.gameResult)
 
-        
+
 
         return { ...resp1.athlete, gamesResults, videos, ...resp2, events, teamHistory }
+
+    } catch (error) {
+        throw error
+    }
+
+
+}
+
+
+export const fetchSearch = async (query) =>{
+
+    
+    try {
+        
+        const resp = await fetch_URL(`https://site.web.api.espn.com/apis/search/v2?region=ar&lang=es&limit=10&page=1&dtciVideoSearch=true&query=${query}`)
+            
+        return resp
+
 
     } catch (error) {
         throw error

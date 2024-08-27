@@ -47,7 +47,7 @@ const GameCard = ({ game }) => {
           </View>
           <View style={s.gameStatus}>
             <Text style={[s.gameStatusText, getStatusStyle(game.status.type.state)]}>
-              {getStatus(game.status.type, game.date)}
+              {getStatus(game.status.type, game.date,false)}
             </Text>
 
 
