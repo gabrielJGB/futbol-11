@@ -53,7 +53,7 @@ const GameCard = ({ game, league, status }) => {
     return (
         <TouchableRipple
             unstable_pressDelay={80}
-            rippleColor="grey"
+            rippleColor="#5e7edb"
             borderless
             onPress={() => router.push(`/game/${game.item.id}`)}
         >

@@ -13,6 +13,9 @@ const VideoCard = ({ video }) => {
 
 
     useEffect(() => {
+
+
+        
         const checkDataSaver = async () => {
             const networkState = await Network.getNetworkStateAsync();
             setUrl(networkState.type === "WIFI" ? video.links.source.HD.href : video.links.mobile.source.href);
@@ -25,7 +28,7 @@ const VideoCard = ({ video }) => {
     const timestamp = convertTimestamp(video.originalPublishDate)
     const date = timestamp.DDMMYYYY
     const time = timestamp.time
-    const accentColor = "lime"
+    const accentColor = "#00eb00"
 
 
     const htmlContentPlyr = `
@@ -48,7 +51,7 @@ const VideoCard = ({ video }) => {
     </head>
     <body style="background-color:${Colors.card}">
 
-    <video id="player"  playsinline muted controls >
+    <video id="player"  playsinline muted controls data-poster="${video.thumbnail}">
 
         <source src="${url}" type="application/x-mpegURL"/>
     </video>
@@ -61,7 +64,6 @@ const VideoCard = ({ video }) => {
     settings: ['quality', 'speed' ],
     speed:{ selected: 1, options: [0.5, 1,1.5, 2] },
     quality:{ default: 480, options: [480,1080] },
-
     controls: [
             'play-large',
             'play',
@@ -101,22 +103,25 @@ const VideoCard = ({ video }) => {
 
 
             </View>
-            <WebView
-                style={s.webview}
+            <View style={{ width: "100%", aspectRatio: (16 / 9), }}>
+                <WebView
+                    style={s.webview}
 
-                userAgent='Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36'
-                allowsFullscreenVideo
-                originWhitelist={['*']}
-                // source={{uri:streamUrl}}
-                // source={{ html: htmlContentNative}}
-                // source={{ html: htmlContentVideojs }}
-                source={{ html: htmlContentPlyr }}
-                javaScriptEnabled={true}
-                domStorageEnabled={true}
-                allowsInlineMediaPlayback={true}
-                allowsProtectedMedia={true}
-                mediaPlaybackRequiresUserAction={false}
-            />
+                    userAgent='Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36'
+                    allowsFullscreenVideo
+                    originWhitelist={['*']}
+                    // source={{uri:streamUrl}}
+                    // source={{ html: htmlContentNative}}
+                    // source={{ html: htmlContentVideojs }}
+                    source={{ html: htmlContentPlyr }}
+                    javaScriptEnabled={true}
+                    domStorageEnabled={true}
+                    allowsInlineMediaPlayback={true}
+                    allowsProtectedMedia={true}
+                    mediaPlaybackRequiresUserAction={false}
+                />
+            </View>
+            
 
             {/* 
             <Video

@@ -69,7 +69,7 @@ const s = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        borderTopColor: Colors.border,
+        borderTopColor: Colors.highlight,
         borderTopWidth: 1,
         marginTop: 10,
         paddingTop: 26,

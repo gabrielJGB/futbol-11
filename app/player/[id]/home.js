@@ -18,13 +18,13 @@ const PlayerHome = () => {
 
         <Information player={player} />
 
-        {
+        {/* {
           "nextGame" in player && "league" in player.nextGame &&
           <NextGame
             game={player.nextGame.league.events}
             leagueName={player.nextGame?.league.name}
           />
-        }
+        } */}
 
         {
 

@@ -83,6 +83,9 @@ export default function App() {
                             name="video/[id]"
                         />
 
+                        <Stack.Screen
+                            name="search" 
+                        />
 
 
                     </Stack>

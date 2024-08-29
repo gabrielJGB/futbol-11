@@ -33,7 +33,7 @@ export const getLogo = (team_p, SIZE) => {
             
             logo = team.logo[0].href
             logo = logo.replace("https://a.espncdn.com/i", `https://a1.espncdn.com/combiner/i?img=/i`)
-            logo += `&h=${SIZE + p}&w=${SIZE + p}`
+            logo += `&h=${SIZE + p}&w=${SIZE + p}&quality=40`
             return <Image source={{ uri: logo }} width={SIZE} height={SIZE} />
         }
 
@@ -41,7 +41,7 @@ export const getLogo = (team_p, SIZE) => {
         if (typeof (team) === "object" && "logo" in team && team.logo != "") {
             logo = team.logo
             logo = logo.replace("https://a.espncdn.com/i", `https://a1.espncdn.com/combiner/i?img=/i`)
-            logo += `&h=${SIZE + p}&w=${SIZE + p}`
+            logo += `&h=${SIZE + p}&w=${SIZE + p}&quality=40`
             return <Image source={{ uri: logo }} width={SIZE} height={SIZE} />
         }
 
@@ -49,7 +49,7 @@ export const getLogo = (team_p, SIZE) => {
             
             logo = team.logos.length > 1 ? team.logos[1].href : team.logos[0].href
             logo = logo.replace("https://a.espncdn.com/i", `https://a1.espncdn.com/combiner/i?img=/i`)
-            logo += `&h=${SIZE + p}&w=${SIZE + p}`
+            logo += `&h=${SIZE + p}&w=${SIZE + p}&quality=40`
             return <Image source={{ uri: logo }} width={SIZE} height={SIZE} />
 
         }

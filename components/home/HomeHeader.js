@@ -44,7 +44,7 @@ const HomeHeader = ({ selectedDate, setSelectedDate }) => {
             </View>
             <View style={s.buttons}>
 
-                <Pressable android_ripple={{ color: "white", }} onPress={() => setSelectedDate(previousDate)}>
+                <Pressable android_ripple={{ color: "#5e7edb", }} onPress={() => setSelectedDate(previousDate)}>
                     <View style={s.button}>
                         <Text style={s.buttonText}>
 
@@ -64,7 +64,7 @@ const HomeHeader = ({ selectedDate, setSelectedDate }) => {
                 </View>
 
 
-                <Pressable android_ripple={{ color: "white" }} onPress={() => setSelectedDate(nextDate)}>
+                <Pressable android_ripple={{ color: "#5e7edb" }} onPress={() => setSelectedDate(nextDate)}>
                     <View style={s.button}>
                         <Text style={s.buttonText}>
 

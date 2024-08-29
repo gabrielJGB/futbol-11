@@ -11,6 +11,7 @@ import { Button, FAB } from 'react-native-paper';
 import Colors from '../constants/Colors';
 import DatePickerComponent from '../components/home/DatePickerComponent';
 import { useApp } from '../context/AppContext';
+import { gamePlaying } from '../utils/match';
 
 
 const Home = () => {
@@ -24,14 +25,17 @@ const Home = () => {
   const { firstRender, setFirstRender } = useApp()
   const formatedDate = dateToYYYYMMDD(selectedDate)
   const { push, replace } = useRouter()
-
+  let i = 0
 
   const _fetchAllLeagues = (load) => {
 
-    console.log(`Fetching date games.. ${selectedDate}`);
+    console.log(`Fetching date games.. ${selectedDate}, ${++i}`);
     setLoading(load)
+
     fetchAllLeagues(formatedDate)
-      .then(data => { setLeagues(data) })
+      .then(data => {
+        setLeagues(data)
+      })
       .catch(error => setError(error.message))
       .finally(() => setLoading(false))
   }
@@ -43,10 +47,12 @@ const Home = () => {
     useCallback(() => {
 
       if (firstRender) {
-        
-        _fetchAllLeagues(false)
-        _fetchAllLeagues(false)
-        _fetchAllLeagues(false)
+        _fetchAllLeagues(true)
+        _fetchAllLeagues(true)
+        _fetchAllLeagues(true)
+        _fetchAllLeagues(true)
+        _fetchAllLeagues(true)
+
         setFirstRender(false)
       }
     }, [firstRender, setFirstRender]))
@@ -58,25 +64,30 @@ const Home = () => {
       // push("team/83?season=2024")
       // push("league/arg.1")
       // push("player/380084")
-      // push("test") 
-
+      let intervalId;
 
       if (isSameDay(selectedDate, new Date())) {
-        _fetchAllLeagues(false)
-        // _fetchAllLeagues(false)
-        // _fetchAllLeagues(false)
-        // _fetchAllLeagues(false)
+        _fetchAllLeagues(true)
+        _fetchAllLeagues(true)
+        _fetchAllLeagues(true)
+        _fetchAllLeagues(true)
 
-        const intervalId = setInterval(() => {
+
+        intervalId = setInterval(() => {
           _fetchAllLeagues(false)
           _fetchAllLeagues(false)
 
         }, 1000 * 30)
 
-        return () => { clearInterval(intervalId) }
+        return () => {
+          
+          clearInterval(intervalId)
+        }
 
       } else {
-
+        
+        clearInterval(intervalId)
+        
         setShowOnlyPlaying(false)
       }
     }, [selectedDate]))
@@ -86,7 +97,6 @@ const Home = () => {
     _fetchAllLeagues(true)
 
   }, [selectedDate])
-
 
 
 

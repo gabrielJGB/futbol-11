@@ -27,7 +27,6 @@ const ArticlePage = () => {
     useEffect(() => {
 
         if (id) {
-
             fetchArticle(id)
                 .then(resp => {setArticle(resp.headlines[0])})
                 .catch(error => setError(error))
@@ -261,18 +260,19 @@ const s = StyleSheet.create({
         color: Colors.text,
     },
     headline: {
-        fontSize: 28,
+        fontSize: 30,
         fontWeight: "500",
         color: Colors.text,
+        // textAlign: "justify",
         lineHeight: 34,
         padding: 7
     },
     description: {
 
         color: "#d4d3d3",
-        fontSize: 17,
+        fontSize: 18,
         lineHeight: 20,
-        textAlign: "justify",
+        textAlign: "auto",
         padding: 7,
         paddingBottom: 12
     },

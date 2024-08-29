@@ -16,12 +16,12 @@ const SearchPage = () => {
 
 
     const manageSearch = (text) => {
-        
+
         Keyboard.dismiss()
         setLoading(true)
         setResults(false)
         fetchSearch(text)
-            .then(res => {setResults(res)})
+            .then(res => { setResults(res) })
             .finally(() => setLoading(false))
     }
 
@@ -29,6 +29,7 @@ const SearchPage = () => {
     const onSubmit = () => {
 
         if (text != "") {
+            
             manageSearch(text)
             setLoading(true)
         }
@@ -56,16 +57,16 @@ const SearchPage = () => {
 
 
     const getImage = (content) => {
-
+        
         if ("image" in content) {
-
             return <Image source={{ uri: "defaultDark" in content.image ? content.image.defaultDark : content.image.default }} style={s.img} />
-
+            
         } else if ("images" in content) {
+            
             return <Image source={{ uri: content.images[0].url }} style={s.img} />
 
         } else if (content.type === "player")
-            return <Icon source="account" color='white' size={30} />
+            return <Icon source="account" color='white' size={40} />
 
         else if (content.type === "team")
             return <Icon source="shield" color='white' size={40} />
@@ -111,13 +112,15 @@ const SearchPage = () => {
                 style={{ backgroundColor: Colors.card }}
                 textColor='white'
                 placeholderTextColor='lime'
+                enterKeyHint='search'
                 right={<TextInput.Icon icon="magnify" color="white" onPress={() => onSubmit()} />}
                 onChangeText={text => setText(text)}
-                onSubmitEditing={()=>onSubmit()}
+                onSubmitEditing={() => onSubmit()}
 
             />
 
             <ScrollView>
+
 
 
                 {
@@ -131,6 +134,19 @@ const SearchPage = () => {
                             <Text style={s.noResults}>Sin resultados</Text>
                             :
                             <View style={s.results}>
+
+                                {
+                                    "didYouMean" in results && text != results.didYouMean &&
+                                    <Text
+                                        onPress={() => {
+                                            
+                                            setText(results.didYouMean)
+                                            manageSearch(results.didYouMean)
+                                            setLoading(true)
+                                        }}
+                                        style={s.dym1}>Quizás quisiste decir: <Text style={s.dym2}>{results.didYouMean}</Text> </Text>
+                                }
+
                                 {
                                     results.results.map((result, i) => (
 
@@ -138,7 +154,7 @@ const SearchPage = () => {
                                             <Text style={s.section}>{result.displayName.replace("Notas", "Noticias").replace("Atletas", "Jugadores")}</Text>
 
                                             {
-                                                result.contents.filter(x => x.sport === "soccer" || x.type === "dStory").sort(((a, b) => { return new Date(a) - new Date(b) })).map((content, k) => (
+                                                result.contents.filter(x => x.sport === "soccer" || x.type === "dStory").sort(((a, b) => { return new Date(b.date) - new Date(a.date) })).map((content, k) => (
                                                     <TouchableRipple
                                                         unstable_pressDelay={80}
                                                         key={k}
@@ -155,7 +171,13 @@ const SearchPage = () => {
                                                                     content.type === "dStory" &&
                                                                     <Text style={s.date}>{convertTimestamp(content.date).DDMMYYYY}</Text>
                                                                 }
-                                                                <Text style={s.contentText}>{content.displayName}</Text>
+                                                                <View style={s.data}>
+                                                                    <Text style={s.contentText}>{content.displayName}</Text>
+                                                                    {
+                                                                        "subtitle" in content && content.type === "player" &&
+                                                                        <Text style={s.subtitle}>{content.subtitle}</Text>
+                                                                    }
+                                                                </View>
                                                             </View>
                                                         </View>
 
@@ -249,5 +271,21 @@ const s = StyleSheet.create({
         width: "100%",
         flexDirection: "column",
         gap: 0
+    },
+    data: {
+        flexDirection: "column",
+    },
+    subtitle: {
+        color: Colors.text100,
+        fontSize: 11
+    },
+    dym1: {
+        paddingVertical: 4,
+        paddingHorizontal: 10,
+        color: "tomato",
+
+    },
+    dym2: {
+        color: "white"
     }
 })

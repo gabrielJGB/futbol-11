@@ -2,16 +2,24 @@ import { convertTimestamp } from "./time"
 
 
 export const fetch_URL = async (URL) => {
-    const time = new Date().getTime()
-    const res = await fetch(`${URL}&_=${time}`, {
-        "headers": {
-            "sec-fetch-site": "none",
-            "sec-fetch-user": "?1",
-        }
+    try {
+
+        const time = new Date().getTime()
+        const res = await fetch(`${URL}&_=${time}`, {
+            "headers": {
+                "sec-fetch-site": "none",
+                "sec-fetch-user": "?1",
+            },
+            "referrerPolicy": "strict-origin-when-cross-origin",
+            "body": null,
+            "method": "GET",
+        })
+        const data = await res.json()
+        return data
+
+    } catch (error) {
+        throw error
     }
-    )
-    const data = await res.json()
-    return data
 
 }
 
@@ -147,11 +155,15 @@ export const fetchTeamRoster = async (teamId, season, leagueSlug) => {
 }
 
 
-
 export const fetchArticle = async (id) => {
 
-    const res = await fetch_URL(`http://now.core.api.espn.com/v1/sports/news/${id}?lang=es`)
-    return res
+    try {
+        const res = await fetch_URL(`https://now.core.api.espn.com/v1/sports/news/${id}?lang=es`)
+        return res
+
+    } catch (error) {
+        throw error
+    }
 
 }
 
@@ -330,13 +342,14 @@ export const fetchPlayer = async (id) => {
 }
 
 
-export const fetchSearch = async (query) =>{
+export const fetchSearch = async (query) => {
 
-    
+        const url = `https://site.web.api.espn.com/apis/search/v2?region=ar&lang=es&limit=10&page=1&dtciVideoSearch=true&query=${query}`
+
     try {
-        
-        const resp = await fetch_URL(`https://site.web.api.espn.com/apis/search/v2?region=ar&lang=es&limit=10&page=1&dtciVideoSearch=true&query=${query}`)
-            
+
+        const resp = await fetch_URL(url)
+
         return resp
 
 
