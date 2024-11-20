@@ -39,7 +39,6 @@ const s = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         backgroundColor:Colors.card,
-
         borderRadius:7
 
     },

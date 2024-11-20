@@ -1,13 +1,14 @@
-import { Image, Text, View } from "react-native"
+import {  Text, View } from "react-native"
 import { Icon } from "react-native-paper"
 import { logo_404, penalty, red_card, goal, own_goal, boot, yellow_card, arrow_in, arrow_out, penaltyMissed } from '../assets/index'
 import { convertTimestamp } from "./time"
 import { fetch_URL } from "./fetch"
+import { Image } from "expo-image"
 
 export const getFlag = (item, SIZE) => {
     const slug = item.slug.slice(0, 3)
 
-    const p = 15
+    const p = 7
     const arr = ['fif', 'afc', 'clu', 'con', 'uef']
 
 
@@ -17,12 +18,12 @@ export const getFlag = (item, SIZE) => {
 
     const logo = `https://a1.espncdn.com/combiner/i?img=/i/teamlogos/countries/500/${item.slug.slice(0, 3)}.png?w=${SIZE + p}&h=${SIZE + p}`
 
-    return <Image source={{ uri: logo }} width={SIZE} height={SIZE} />
+    return <Image source={{ uri: logo }} style={{ width: SIZE, height: SIZE }}  cachePolicy="memory-disk" />
 }
 
 export const getLogo = (team_p, SIZE) => {
     let logo = ""
-    const p = 15
+    const p = 7
 
     if (team_p) {
 
@@ -33,30 +34,30 @@ export const getLogo = (team_p, SIZE) => {
             
             logo = team.logo[0].href
             logo = logo.replace("https://a.espncdn.com/i", `https://a1.espncdn.com/combiner/i?img=/i`)
-            logo += `&h=${SIZE + p}&w=${SIZE + p}&quality=40`
-            return <Image source={{ uri: logo }} width={SIZE} height={SIZE} />
+            logo += `&h=${SIZE + p}&w=${SIZE + p}`
+            return <Image source={{ uri: logo }} style={{ width: SIZE, height: SIZE }}   cachePolicy="memory-disk"/>
         }
 
 
         if (typeof (team) === "object" && "logo" in team && team.logo != "") {
             logo = team.logo
             logo = logo.replace("https://a.espncdn.com/i", `https://a1.espncdn.com/combiner/i?img=/i`)
-            logo += `&h=${SIZE + p}&w=${SIZE + p}&quality=40`
-            return <Image source={{ uri: logo }} width={SIZE} height={SIZE} />
+            logo += `&h=${SIZE + p}&w=${SIZE + p}`
+            return <Image source={{ uri: logo }} style={{ width: SIZE, height: SIZE }}  cachePolicy="memory-disk"/>
         }
 
         if (typeof (team) === "object" && "logos" in team && team.logos.length > 0) {
             
             logo = team.logos.length > 1 ? team.logos[1].href : team.logos[0].href
             logo = logo.replace("https://a.espncdn.com/i", `https://a1.espncdn.com/combiner/i?img=/i`)
-            logo += `&h=${SIZE + p}&w=${SIZE + p}&quality=40`
-            return <Image source={{ uri: logo }} width={SIZE} height={SIZE} />
+            logo += `&h=${SIZE + p}&w=${SIZE + p}`
+            return <Image source={{ uri: logo }} style={{ width: SIZE, height: SIZE }} cachePolicy="memory-disk" />
 
         }
 
 
 
-        return <Image source={logo_404} style={{ width: SIZE, height: SIZE }} />
+        return <Image source={logo_404} style={{ width: SIZE, height: SIZE }}  />
     }
 
     return <></>

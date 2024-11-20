@@ -10,6 +10,7 @@ import { fetchArticle } from '../../utils/fetch'
 import { convertTimestamp } from '../../utils/time'
 import VideoCard from '../../components/game/VideoCard'
 import Colors from '../../constants/Colors'
+import WebView from 'react-native-webview'
 
 
 const ArticlePage = () => {
@@ -17,8 +18,9 @@ const ArticlePage = () => {
     const { id } = useLocalSearchParams()
     const [article, setArticle] = useState(false)
     const [loading, setLoading] = useState(true)
-    
+
     const [error, setError] = useState(false)
+    const [tweets, setTweets] = useState([])
     const { push, back } = useRouter()
     const published = `${convertTimestamp(article.published).dayOfWeek} ${convertTimestamp(article.published).day} de ${convertTimestamp(article.published).month} de ${convertTimestamp(article.published).year}, ${convertTimestamp(article.published).time}hs`
     const season = new Date().getFullYear()
@@ -28,7 +30,7 @@ const ArticlePage = () => {
 
         if (id) {
             fetchArticle(id)
-                .then(resp => {setArticle(resp.headlines[0])})
+                .then(resp => { setArticle(resp.headlines[0]) })
                 .catch(error => setError(error))
                 .finally(() => setLoading(false))
         }
@@ -53,6 +55,19 @@ const ArticlePage = () => {
 
     }, [id])
 
+
+    useEffect(() => {
+
+        if (article) {
+
+            let regex = /https:\/\/twitter\.com\/[^\/]+\/status\/\d+/g;
+            let matches = article.story.match(regex);
+
+            if (matches)
+                setTweets(matches)
+        }
+
+    }, [article])
 
 
 
@@ -94,6 +109,8 @@ const ArticlePage = () => {
 
 
     const parseHTML = (text) => {
+
+
 
         text = text.replace(/<a[^>]*>(.*?)<\/a>/gi, '$1');
         text = text.replace(/<h2>(.*?)<\/h2>/gi, (match, p1) => `<strong>${p1.toUpperCase()}</strong>\n`);
@@ -180,6 +197,21 @@ const ArticlePage = () => {
                     </View>
                 }
 
+                {
+                    tweets.map((item, i) => (
+
+                        <WebView
+                            key={i}
+                            forceDarkOn={true}
+                            style={{ flex: 1, width: "100%", height: 750, marginBottom:12}}
+                            source={{ uri: item }}
+
+                        />
+
+                    ))
+                }
+
+
                 <Text style={s.source}>En esta noticia:</Text>
                 <View style={s.tags}>
                     {
@@ -212,7 +244,7 @@ const ArticlePage = () => {
                         {
                             article.video.map((video, i) => (
 
-                                <VideoCard key={i} video={video} />
+                                <VideoCard key={i} video={video} autoplay={false} muted={false} />
                             ))
                         }
 

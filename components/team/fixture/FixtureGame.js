@@ -7,7 +7,7 @@ import { convertTimestamp } from '../../../utils/time'
 import { useStateContext } from '../../../context/StateContext'
 import { Icon } from 'react-native-paper'
 
-const FixtureGame = ({ game, team, n }) => {
+const FixtureGame = ({ game, team, n, showOnly }) => {
 
   const { push } = useRouter()
   const { selectedLeague } = useStateContext()
@@ -43,28 +43,28 @@ const FixtureGame = ({ game, team, n }) => {
     <TouchableNativeFeedback
       onPress={() => push(`game/${game.id}`)}
     >
-      <View style={s.container}>
+      <View style={[s.container, { display: showOnly==="ALL" || showOnly === "L" && homeAway === "L" ||showOnly === "V" && homeAway === "V"? "flex" : "none" }]}>
         <View style={[s.left]}>
 
           <View style={s.header}>
-            
 
-              {/* <Text style={s.gameNum}>{n}</Text> */}
 
-              <View style={s.headerRight}>
-                {/* <Text style={s.gameDate}>{gameTime}</Text> */}
-                {
-                  isTournament && leagueName.trim() != "Copa de la Liga Profesional" && 
-                  <Icon source="trophy" size={11} color='white' />
-                }
-                <Text style={s.gameStage}>
-                  {selectedLeague === "all" ? `${leagueName} ${isTournament ? `| ${gameStage}` : ""}` : gameStage}
-                  {/* {selectedLeague === "all" ? `${leagueName} ${isTournament?(" | "+gameStage):""}`: isTournament?gameStage:""} */}
+            {/* <Text style={s.gameNum}>{n}</Text> */}
 
-                </Text>
+            <View style={s.headerRight}>
+              {/* <Text style={s.gameDate}>{gameTime}</Text> */}
+              {
+                isTournament && leagueName.trim() != "Copa de la Liga Profesional" &&
+                <Icon source="trophy" size={11} color='white' />
+              }
+              <Text style={s.gameStage}>
+                {selectedLeague === "all" ? `${leagueName} ${isTournament ? `| ${gameStage}` : ""}` : gameStage}
+                {/* {selectedLeague === "all" ? `${leagueName} ${isTournament?(" | "+gameStage):""}`: isTournament?gameStage:""} */}
 
-              </View>
-            
+              </Text>
+
+            </View>
+
 
             <View style={s.headerComponent}>
               <Text style={s.gameStage}>
@@ -108,11 +108,11 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: Colors.card100,
-    
-    
+
+
   },
   header: {
-    width:"100%",
+    width: "100%",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -121,14 +121,14 @@ const s = StyleSheet.create({
     paddingVertical: 3,
     paddingHorizontal: 2
   },
-  
+
   headerRight: {
     display: "flex",
     flexDirection: "row",
-    alignItems:"center",
-    width:"85%",
+    alignItems: "center",
+    width: "85%",
     gap: 3,
-    paddingLeft:3,
+    paddingLeft: 3,
 
   },
   headerComponent: {
@@ -190,7 +190,7 @@ const s = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     paddingVertical: 5,
-    paddingLeft:2,
+    paddingLeft: 2,
     gap: 5,
     alignItems: "center",
   },

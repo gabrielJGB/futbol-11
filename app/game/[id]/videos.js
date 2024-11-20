@@ -15,7 +15,7 @@ const Videos = () => {
 
         {
           game.videos.map((video, i) => (
-            <VideoCard key={i} video={video} />
+            <VideoCard key={i} video={video} muted={false} autoplay={false} />
           ))
         }
 

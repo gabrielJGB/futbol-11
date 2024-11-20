@@ -3,16 +3,17 @@ import { convertTimestamp } from "./time"
 
 export const fetch_URL = async (URL) => {
     try {
-
+        //&_=${time}
         const time = new Date().getTime()
-        const res = await fetch(`${URL}&_=${time}`, {
+        const res = await fetch(`${URL}`, {
             "headers": {
                 "sec-fetch-site": "none",
                 "sec-fetch-user": "?1",
             },
+            "cache":"no-store",
             "referrerPolicy": "strict-origin-when-cross-origin",
             "body": null,
-            "method": "GET",
+            "method": "GET", 
         })
         const data = await res.json()
         return data
@@ -39,7 +40,7 @@ export const fetchAllLeagues = async (date) => {
 
 }
 
-//13852989
+
 
 export const fetchGame = async (id) => {
     const num = new Date().getTime()

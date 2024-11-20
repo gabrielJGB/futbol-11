@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Divider, Icon } from 'react-native-paper'
 
-import { convertTimestamp } from '../../../utils/time'
+import { convertTimestamp, timeUntil } from '../../../utils/time'
 import { useStateContext } from '../../../context/StateContext'
 import Colors from '../../../constants/Colors'
 
@@ -33,6 +33,9 @@ const GameInfo = () => {
     const gameDate = convertTimestamp(game.header.competitions[0].date)
     const dateString = `${gameDate.dayOfWeek} ${gameDate.day} de ${gameDate.month} de ${gameDate.year}, ${gameDate.time} hs`
 
+    const playing = game.header.competitions[0].status.type.state === "in" 
+    
+
     return (
         <View style={s.container}>
 
@@ -41,6 +44,9 @@ const GameInfo = () => {
             <Divider style={s.divider} />
 
             <Card title="Fecha" value={dateString} icon={"calendar-month"} />
+
+            {!playing && <Card title="Contador" value={timeUntil(game.header.competitions[0].date)} icon={"timer-sand"} />}
+
 
             {
                 "venue" in game.gameInfo && "city" in game.gameInfo.venue.address &&
@@ -51,7 +57,7 @@ const GameInfo = () => {
             {
                 "venue" in game.gameInfo && game.gameInfo.venue &&
 
-                <Card title={"Estadio"} value={game.gameInfo.venue.fullName} icon={"stadium"} />
+                <Card title={"Estadio"} value={game.gameInfo.venue.fullName.replace("TBC","A confirmar")} icon={"stadium"} />
 
             }
 
@@ -124,36 +130,36 @@ const s = StyleSheet.create({
         alignItems: "center",
         gap: 12,
         paddingVertical: 7,
-        paddingLeft:12,
-        
-        
+        paddingLeft: 12,
+
+
     },
-    container:{
-        backgroundColor:Colors.card,
-        borderRadius:7
+    container: {
+        backgroundColor: Colors.card,
+        borderRadius: 7
     },
-    title:{
-        paddingVertical:5,
-        textAlign:"center",
-        fontSize:18,
-        fontWeight:"500",
-        color:Colors.text
+    title: {
+        paddingVertical: 5,
+        textAlign: "center",
+        fontSize: 18,
+        fontWeight: "500",
+        color: Colors.text
     },
-    cardTitle:{
-        fontSize:12,
-        fontWeight:"500",
-        color:Colors.text100
+    cardTitle: {
+        fontSize: 12,
+        fontWeight: "500",
+        color: Colors.text100
     },
-    cardValue:{
-        
-        fontSize:14,
-        color:Colors.text
+    cardValue: {
+
+        fontSize: 14,
+        color: Colors.text
     },
-    divider:{
-        backgroundColor:Colors.highlight
+    divider: {
+        backgroundColor: Colors.highlight
     },
-    right:{
-        maxWidth:"85%"
+    right: {
+        maxWidth: "85%"
     }
 
 })

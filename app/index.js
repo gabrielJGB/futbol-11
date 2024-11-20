@@ -43,58 +43,80 @@ const Home = () => {
 
 
 
+  // useFocusEffect(
+  //   useCallback(() => {
+
+  //     if (firstRender) {
+  //       _fetchAllLeagues(false)
+  //       _fetchAllLeagues(false)
+  //       _fetchAllLeagues(false)
+  //       _fetchAllLeagues(false)
+  //       _fetchAllLeagues(false)
+
+  //       setFirstRender(false)
+  //     }
+  //   }, [firstRender, setFirstRender]))
+
+
   useFocusEffect(
     useCallback(() => {
-
-      if (firstRender) {
-        _fetchAllLeagues(true)
-        _fetchAllLeagues(true)
-        _fetchAllLeagues(true)
-        _fetchAllLeagues(true)
-        _fetchAllLeagues(true)
-
-        setFirstRender(false)
-      }
-    }, [firstRender, setFirstRender]))
-
-
-  useFocusEffect(
-    useCallback(() => {
-      // push("game/717399")
-      // push("team/83?season=2024")
+      // push("game/694344")
+      // push("team/5?season=2024")
       // push("league/arg.1")
       // push("player/380084")
-      let intervalId;
+      
+      let intervalId,timeoutId;
 
+      if (gamePlaying(leagues)){
+        _fetchAllLeagues(true)
+      }
+
+      
       if (isSameDay(selectedDate, new Date())) {
+        
         _fetchAllLeagues(true)
-        _fetchAllLeagues(true)
-        _fetchAllLeagues(true)
-        _fetchAllLeagues(true)
+        timeoutId = setTimeout(() => {
+          
+          _fetchAllLeagues(false)
+          _fetchAllLeagues(false)
+          _fetchAllLeagues(false)
+        }, 3000);
 
 
         intervalId = setInterval(() => {
           _fetchAllLeagues(false)
-          _fetchAllLeagues(false)
+          
+
+          if (gamePlaying(leagues)) {
+            
+            timeoutId = setTimeout(() => {
+            
+              _fetchAllLeagues(false)
+              _fetchAllLeagues(false)
+            }, 3000);
+  
+          }
 
         }, 1000 * 30)
 
         return () => {
-          
           clearInterval(intervalId)
+          clearTimeout(timeoutId)
         }
 
       } else {
-        
         clearInterval(intervalId)
-        
         setShowOnlyPlaying(false)
       }
     }, [selectedDate]))
 
+
+
   useEffect(() => {
     setLeagues(false)
+
     _fetchAllLeagues(true)
+    
 
   }, [selectedDate])
 

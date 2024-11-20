@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "scheme": "app-scheme",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash2.png",
       "resizeMode": "contain",

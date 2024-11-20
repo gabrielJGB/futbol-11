@@ -11,6 +11,7 @@ import VideoCard from '../../../components/game/VideoCard'
 import GameInfo from '../../../components/game/index/GameInfo'
 import AttackMomentum from '../../../components/game/index/AttackMomentum'
 import GameArticle from '../../../components/game/index/GameArticle'
+import LeagueArticles from '../../../components/game/index/LeagueArticles'
 
 const Overview = () => {
   const { game, sofaId } = useStateContext()
@@ -26,7 +27,7 @@ const Overview = () => {
 
         {
           game.videos?.length > 0 &&
-          <VideoCard video={game.videos[0]} />
+          <VideoCard video={game.videos[0]} autoplay={true} muted={true}/>
         }
 
         {
@@ -41,6 +42,12 @@ const Overview = () => {
           "article" in game &&
           <GameArticle article={game.article} />
 
+        }
+
+        {
+          "news" in game && game.news.articles.length > 0 ?
+            <LeagueArticles news={game.news} />
+            : <></>
         }
 
 

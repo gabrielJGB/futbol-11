@@ -50,7 +50,7 @@ const VideoPage = () => {
                 //     <Text style={s.error}>Error al obtener el video</Text>
                 //     :
                 <View style={s.video}> 
-                    <VideoCard video={video} />
+                    <VideoCard video={video}  muted={false} autoplay={true}  />
                 </View>
             }
         </View>

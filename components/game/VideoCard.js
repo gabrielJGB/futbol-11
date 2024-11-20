@@ -7,7 +7,7 @@ import WebView from 'react-native-webview'
 import * as Network from 'expo-network';
 
 
-const VideoCard = ({ video }) => {
+const VideoCard = ({ video,autoplay,muted }) => {
 
     const [url, setUrl] = useState(video.links.source.HD.href)
 
@@ -51,7 +51,7 @@ const VideoCard = ({ video }) => {
     </head>
     <body style="background-color:${Colors.card}">
 
-    <video id="player"  playsinline muted controls data-poster="${video.thumbnail}">
+    <video id="player"  playsinline ${autoplay?"autoplay":""} ${muted?"muted":""} controls data-poster="${video.thumbnail}">
 
         <source src="${url}" type="application/x-mpegURL"/>
     </video>
@@ -61,17 +61,19 @@ const VideoCard = ({ video }) => {
 
 <script>
   let player = new Plyr('#player',{
-    settings: ['quality', 'speed' ],
+    settings: ['speed'],
     speed:{ selected: 1, options: [0.5, 1,1.5, 2] },
-    quality:{ default: 480, options: [480,1080] },
+    seekTime:5,
     controls: [
-            'play-large',
-            'play',
-            'mute',
-            'current-time',
-            'progress',
-            'settings',
-            'fullscreen', 
+        'rewind',
+        'play-large',
+        'play',
+        'mute',
+        'current-time',
+        'progress',
+        'settings',
+        'fullscreen', 
+        'fast-forward',
     ],
   });
 

@@ -3,27 +3,29 @@ import React, { useEffect, useState } from 'react'
 import { useStateContext } from '../../../context/StateContext'
 import Colors from '../../../constants/Colors'
 import FixtureGame from '../../../components/team/fixture/FixtureGame'
-import { Button } from 'react-native-paper'
+import { Button, SegmentedButtons } from 'react-native-paper'
 import { useRouter } from 'expo-router'
 
 
-const getStats = (events, team) => {
+const getStats = (events, team, showOnly) => {
   let won = 0, lost = 0, tied = 0
 
-
+  showOnly
 
   events.forEach(game => {
     const _team = game.competitions[0].competitors.find(comp => comp.id === team.id)
     const rival = game.competitions[0].competitors.find(comp => comp.id != team.id)
     const result = _team.winner ? "G" : (rival.winner ? "P" : "E")
 
-    if (game.played)
-      if (result === "G")
-        won++
-      else if (result === "P")
-        lost++
-      else if (result === "E")
-        tied++
+    if (showOnly === "ALL" || _team.homeAway === "home" && showOnly === "L" || _team.homeAway === "away" && showOnly === "V") {
+      if (game.played)
+        if (result === "G")
+          won++
+        else if (result === "P")
+          lost++
+        else if (result === "E")
+          tied++
+    }
   })
 
 
@@ -34,7 +36,7 @@ const getStats = (events, team) => {
   let lostRate = parseInt((lost * 100) / total)
 
 
-  return won === 0 && tied === 0 && lost === 0 ? false : [
+  return won === 0 && tied === 0 && lost === 0 ? [] : [
     { value: won, percentage: wonRate, color: "#00A537", displayName: "Victorias" },
     { value: tied, percentage: tiedRate, color: "#F7FF32", displayName: "Empates" },
     { value: lost, percentage: lostRate, color: "#EB1E1C", displayName: "Derrotas" },
@@ -49,6 +51,8 @@ const Fixture = () => {
   const [selectedLeagueEvents, setSelectedLeagueEvents] = useState([])
   const [selectedLeagueName, setSelectedLeagueName] = useState('')
   const [error, setError] = useState(false)
+  const [value, setValue] = useState("ALL");
+
   const { push } = useRouter()
   const {
     team,
@@ -102,22 +106,45 @@ const Fixture = () => {
 
         <Text style={s.leagueName}>{selectedLeague != "all" ? selectedLeagueName : `Temporada ${seasonText}`}</Text>
 
+        <SegmentedButtons
+          theme={{ colors: { secondaryContainer:"white" } }}
+          onValueChange={setValue}
+          density='small'
+          value={value}
+          style={{ marginHorizontal: 40 }}
+          buttons={[
+            {
 
+              value: 'L',
+              label: 'Local',
+              uncheckedColor: "grey",
 
+            },
+            {
 
+              value: 'ALL',
+              label: 'Todos',
+              uncheckedColor: "grey",
 
-        {
-          summary && false &&
-          <Text style={s.summary}>{summary}</Text>
-        }
+            },
+
+            {
+
+              value: 'V',
+              label: 'Visitante',
+              uncheckedColor: "grey",
+
+            },
+          ]}
+        />
 
         {
           selectedLeagueEvents &&
           <View style={s.statsContainer}>
 
+
             {
-              getStats(selectedLeagueEvents, team) &&
-              getStats(selectedLeagueEvents, team)?.map((stat, i) => (
+              getStats(selectedLeagueEvents, team, value)?.map((stat, i) => (
                 <View key={i} style={{ backgroundColor: stat.color, width: `${stat.percentage}%`, minWidth: (stat.percentage != 0 ? "8%" : "0") }}>
                   <Text style={[s.stat, { color: `${i === 1 ? "black" : "white"}` }]}  >{stat.value}</Text>
 
@@ -125,14 +152,18 @@ const Fixture = () => {
               ))
 
             }
+
           </View>
         }
+
+
+
 
 
         <View style={s.gameContainer}>
           {
             selectedLeagueEvents.map((game, i) => (
-              <FixtureGame key={i} team={team} game={game} n={i + 1} />
+              <FixtureGame key={i} team={team} game={game} n={i + 1} showOnly={value} />
             ))
           }
         </View>
@@ -188,6 +219,7 @@ const s = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: 10,
+
     marginHorizontal: 3,
 
   },
@@ -197,7 +229,7 @@ const s = StyleSheet.create({
     marginTop: 20
   },
   statsContainer: {
-    marginTop: 5,
+    marginTop: 18,
     marginBottom: 17,
     display: "flex",
     flexDirection: "row",

@@ -69,3 +69,43 @@ export const convertTimestamp = (timestamp) => {
 const formatNumber = (number) => {
     return number < 10 ? '0' + number : number;
 }
+
+
+export const  timeUntil = (dateString) => {
+    const targetDate = new Date(dateString);
+    const now = new Date();
+    let diff = targetDate - now;
+
+    const isPast = diff < 0;
+    diff = Math.abs(diff);
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    let result = "";
+
+    if (days > 0) {
+        result += `${days} día${days > 1 ? 's' : ''}`;
+    }
+
+    if (hours > 0) {
+        if (result) result += ", ";
+        result += `${hours} hora${hours > 1 ? 's' : ''}`;
+    }
+
+    if (minutes > 0) {
+        if (result) result += " y ";
+        result += `${minutes} minuto${minutes > 1 ? 's' : ''}`;
+    }
+
+    if (!result) {
+        result = "menos de un minuto";
+    }
+
+    if (isPast) {
+        return `Hace ${result}`;
+    } else {
+        return `Empieza en ${result}`;
+    }
+}

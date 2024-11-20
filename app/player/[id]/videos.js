@@ -12,7 +12,7 @@ const PlayerVideos = () => {
         <View style={s.container}>
           {
             player.videos?.map((video, i) => (
-              <VideoCard key={i} video={video}/>
+              <VideoCard key={i} video={video}  muted={false} autoplay={false} />
             ))
           }
         </View>

@@ -1,11 +1,12 @@
 import { View, Text, StyleSheet, TouchableNativeFeedback, TouchableOpacity, Pressable, Dimensions } from 'react-native'
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import colors from '../../constants/Colors'
 import { formatDateObject, isSameDay } from '../../utils/time'
 import { Button, IconButton } from 'react-native-paper'
 import Colors from '../../constants/Colors'
 import { useStateContext } from '../../context/StateContext'
-import { useRouter } from 'expo-router'
+import { useFocusEffect, useRouter } from 'expo-router'
+import { gamePlaying } from '../../utils/match'
 
 
 const HomeHeader = ({ selectedDate, setSelectedDate }) => {
@@ -13,7 +14,19 @@ const HomeHeader = ({ selectedDate, setSelectedDate }) => {
     const { push } = useRouter()
     const previousDate = new Date(selectedDate.getTime() - 86400000)
     const nextDate = new Date(selectedDate.getTime() + 86400000)
-    const { showOnlyPlaying, setShowOnlyPlaying } = useStateContext()
+    const { showOnlyPlaying, setShowOnlyPlaying, leagues } = useStateContext()
+    const [showLiveButton, setShowLiveButton] = useState(false)
+
+
+    useFocusEffect(useCallback(() => {
+
+        if (leagues) 
+            setShowLiveButton(gamePlaying(leagues))
+        
+
+    }, [leagues]))
+
+
 
     return (
         <View style={s.container}>
@@ -21,14 +34,14 @@ const HomeHeader = ({ selectedDate, setSelectedDate }) => {
                 <IconButton
                     icon="magnify"
                     iconColor='white'
-                    style={{ marginVertical: 0, marginRight:20,marginLeft:0, padding: 0 }}
+                    style={{ marginVertical: 0, marginRight: 20, marginLeft: 0, padding: 0 }}
                     size={25}
                     onPress={() => push("search")}
                 />
                 <Text style={s.headerTitle}>FÚTBOL 11</Text>
 
                 {
-                    isSameDay(selectedDate, new Date()) ?
+                    showLiveButton ?
                         <Button
                             mode="outlined" labelStyle={{ marginVertical: 5, marginHorizontal: 0 }}
 
@@ -38,7 +51,7 @@ const HomeHeader = ({ selectedDate, setSelectedDate }) => {
                             onPress={() => setShowOnlyPlaying(!showOnlyPlaying)}
                         >En vivo</Button>
                         :
-                        <View style={{width:54}}></View>
+                        <View style={{ width: 54 }}></View>
                 }
 
             </View>
