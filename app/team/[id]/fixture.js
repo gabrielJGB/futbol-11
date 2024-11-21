@@ -9,13 +9,33 @@ import { useRouter } from 'expo-router'
 
 const getStats = (events, team, showOnly) => {
   let won = 0, lost = 0, tied = 0
+  let teamScore = 0
+  let rivalScore = 0
 
-  showOnly
 
   events.forEach(game => {
     const _team = game.competitions[0].competitors.find(comp => comp.id === team.id)
     const rival = game.competitions[0].competitors.find(comp => comp.id != team.id)
     const result = _team.winner ? "G" : (rival.winner ? "P" : "E")
+
+    if ("score" in _team) {
+      if (showOnly === "ALL") {
+
+        teamScore = teamScore + parseInt(_team.score.value)
+        rivalScore = rivalScore + parseInt(rival.score.value)
+
+      } else if (showOnly === "L" && _team.homeAway === "home") {
+
+        teamScore = teamScore + parseInt(_team.score.value)
+        rivalScore = rivalScore + parseInt(rival.score.value)
+
+      } else if (showOnly === "V"&& _team.homeAway === "away") {
+
+        teamScore = teamScore + parseInt(_team.score.value)
+        rivalScore = rivalScore + parseInt(rival.score.value)
+
+      }
+    }
 
     if (showOnly === "ALL" || _team.homeAway === "home" && showOnly === "L" || _team.homeAway === "away" && showOnly === "V") {
       if (game.played)
@@ -28,6 +48,8 @@ const getStats = (events, team, showOnly) => {
     }
   })
 
+  const score = [teamScore, rivalScore]
+
 
   let total = won + lost + tied
 
@@ -36,11 +58,14 @@ const getStats = (events, team, showOnly) => {
   let lostRate = parseInt((lost * 100) / total)
 
 
-  return won === 0 && tied === 0 && lost === 0 ? [] : [
-    { value: won, percentage: wonRate, color: "#00A537", displayName: "Victorias" },
-    { value: tied, percentage: tiedRate, color: "#F7FF32", displayName: "Empates" },
-    { value: lost, percentage: lostRate, color: "#EB1E1C", displayName: "Derrotas" },
-  ]
+  return won === 0 && tied === 0 && lost === 0 ? { arr: [] } : {
+    arr: [
+      { value: won, percentage: wonRate, color: "#00A537", displayName: "Victorias" },
+      { value: tied, percentage: tiedRate, color: "#F7FF32", displayName: "Empates" },
+      { value: lost, percentage: lostRate, color: "#EB1E1C", displayName: "Derrotas" },
+    ],
+    score
+  }
 
 
 }
@@ -107,7 +132,7 @@ const Fixture = () => {
         <Text style={s.leagueName}>{selectedLeague != "all" ? selectedLeagueName : `Temporada ${seasonText}`}</Text>
 
         <SegmentedButtons
-          theme={{ colors: { secondaryContainer:"white" } }}
+          theme={{ colors: { secondaryContainer: "white" } }}
           onValueChange={setValue}
           density='small'
           value={value}
@@ -144,7 +169,7 @@ const Fixture = () => {
 
 
             {
-              getStats(selectedLeagueEvents, team, value)?.map((stat, i) => (
+              getStats(selectedLeagueEvents, team, value).arr?.map((stat, i) => (
                 <View key={i} style={{ backgroundColor: stat.color, width: `${stat.percentage}%`, minWidth: (stat.percentage != 0 ? "8%" : "0") }}>
                   <Text style={[s.stat, { color: `${i === 1 ? "black" : "white"}` }]}  >{stat.value}</Text>
 
@@ -156,9 +181,17 @@ const Fixture = () => {
           </View>
         }
 
-
-
-
+        <View style={s.scoreContainer}>
+          {
+            selectedLeagueEvents &&
+            getStats(selectedLeagueEvents, team, value).score?.map((score, j) => (
+              <View key={j} style={s.score}>
+                <Text style={{ color: "white", fontSize: 14, fontWeight: "500" }}>{score}</Text>
+                <Text style={{ color: "white", fontSize: 12 }}>{j === 0 ? "Goles a favor" : "Goles en contra"}</Text>
+              </View>
+            ))
+          }
+        </View>
 
         <View style={s.gameContainer}>
           {
@@ -167,6 +200,8 @@ const Fixture = () => {
             ))
           }
         </View>
+
+
 
 
         {
@@ -230,12 +265,13 @@ const s = StyleSheet.create({
   },
   statsContainer: {
     marginTop: 18,
-    marginBottom: 17,
+    marginBottom: 6,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    width: "97%",
+    width: "80%",
+    
 
   },
   stat: {
@@ -247,6 +283,22 @@ const s = StyleSheet.create({
     textAlign: "center",
     color: Colors.text100,
     marginBottom: 12
+  },
+  scoreContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "100%",
+    padding: 8,
+    marginBottom:5,
+  },
+  score: {
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  scoreText: {
+    color: "white",
+    fontSize: 12
   }
+
 
 })

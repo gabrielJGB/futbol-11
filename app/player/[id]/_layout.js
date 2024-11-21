@@ -67,7 +67,7 @@ const PlayerLayout = () => {
                     options={{
                         href: "player/[id]/home",
                         title: 'Información',
-                        tabBarIcon: ({ color }) => <Icon source="information-outline" size={ICON_SIZE} color={color} />,
+                        tabBarIcon: ({ color }) => <Icon source="account" size={ICON_SIZE} color={color} />,
                     }}
                 />
 

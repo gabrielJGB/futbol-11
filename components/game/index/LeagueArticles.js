@@ -9,13 +9,15 @@ const LeagueArticles = ({ news }) => {
 
     const { push } = useRouter()
 
+
+
     const articles = news.articles.map(x => {
         return {
             headline: x.headline,
             image: x.images[0].url,
             published: x.published,
             type: x.type,
-            href: x.links.api.news.href,
+            href: x.links.api.self.href,
         }
     })
 
@@ -23,6 +25,8 @@ const LeagueArticles = ({ news }) => {
     return (
         <View style={s.container}>
             <Text style={s.header}>{news.header.replace("- ", "")}</Text>
+
+
 
             {
                 articles.map((article, i) => (
@@ -36,41 +40,49 @@ const LeagueArticles = ({ news }) => {
                         onPress={() => {
 
 
+
                             if (article.type === "Media") {
-                                const id = article.href.match(/clips\/(.*)\?lang/)[1]
+                                const id = article.href.match(/clips\/(.*)/)[1]
                                 push(`video/${id}`)
                             }
                             else {
-                                const id = article.href.match(/news\/(.*)\?lang/)[1]
+                                const id = article.href.match(/news\/(.*)/)[1]
                                 push(`article/${id}`)
                             }
                         }}
                     >
                         <View style={s.article}>
 
+
+
                             <Image source={{ uri: article.image }} style={s.img} />
 
-                            {
-                                // article.type === "Media" ?
-                                //     <Icon source="video-box" size={32} color='#f3f3f3' />
-                                //     :
-                                //     <Icon
-                                //         source="newspaper-variant"
-                                //         size={32}
-                                //         color='#f3f3f3'
-                                        
-                                //     />
-                            }
 
                             <View style={s.contentBody}>
 
-                                <Text style={s.date}>{convertTimestamp(article.published).DDMMYYYY}</Text>
 
+                                <View style={s.articleHeader}>
+                                    {
+                                        article.type === "Media" ?
+                                            <Icon source="video-box" size={13} color='grey' />
+                                            :
+                                            <Icon
+                                                source="newspaper-variant"
+                                                size={13}
+                                                color='grey'
+
+                                            />
+                                    }
+                                    <Text style={s.date}>{convertTimestamp(article.published).DDMMYYYY}</Text>
+                                </View>
 
                                 <Text numberOfLines={2} style={s.contentText}>
                                     {/* {article.type === "Media" && <><Icon source="video" size={12} color="white" /> </>} */}
                                     {article.headline}
+
+
                                 </Text>
+
 
 
                             </View>
@@ -107,10 +119,14 @@ const s = StyleSheet.create({
         backgroundColor: Colors.card,
         padding: 7,
     },
+    articleHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4
+    },
     contentBody: {
         width: "100%",
         flexDirection: "column",
-
         gap: 0
     },
     img: {
@@ -121,7 +137,8 @@ const s = StyleSheet.create({
     contentText: {
         maxWidth: "85%",
         fontSize: 13,
-        color: "white"
+        color: "white",
+        marginVertical: 2
     },
     date: {
         color: Colors.text100,

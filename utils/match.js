@@ -1,9 +1,9 @@
-import {  Text, View } from "react-native"
+import {  Text, View,Image } from "react-native"
 import { Icon } from "react-native-paper"
 import { logo_404, penalty, red_card, goal, own_goal, boot, yellow_card, arrow_in, arrow_out, penaltyMissed } from '../assets/index'
 import { convertTimestamp } from "./time"
 import { fetch_URL } from "./fetch"
-import { Image } from "expo-image"
+//import { Image } from "expo-image"
 
 export const getFlag = (item, SIZE) => {
     const slug = item.slug.slice(0, 3)
@@ -18,7 +18,7 @@ export const getFlag = (item, SIZE) => {
 
     const logo = `https://a1.espncdn.com/combiner/i?img=/i/teamlogos/countries/500/${item.slug.slice(0, 3)}.png?w=${SIZE + p}&h=${SIZE + p}`
 
-    return <Image source={{ uri: logo }} style={{ width: SIZE, height: SIZE }}  cachePolicy="memory-disk" />
+    return <Image source={{ uri: logo }} style={{ width: SIZE, height: SIZE }}   />
 }
 
 export const getLogo = (team_p, SIZE) => {

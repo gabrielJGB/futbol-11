@@ -23,7 +23,7 @@ const LeagueCard = ({ league }) => {
                 <View style={[s.leagueHeader, { borderBottomWidth: leagueVisible ? 1 : 0 }]}>
                     <View style={s.leagueHeaderContent}>
                         {getFlag(league.item, 25)}
-                        <Text style={s.headerText}>{league.item.name.toUpperCase()}</Text>
+                        <Text style={s.headerText}>{league.item.name.replace("Argentine","").toUpperCase()}</Text>
                     </View>
 
                     <Icon source={`chevron-${leagueVisible ? "up" : "down"}`} color="white" size={18} />

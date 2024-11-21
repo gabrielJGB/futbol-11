@@ -25,13 +25,15 @@ const ArticleCard = ({ article }) => {
 
         } else {
             // league
-            const url = article.links.api.news.href
-            const match = url.match(/\/(\d+)\?/)
+            const url = article.links.api.self.href
+            const match = url.match(/\/(\d+)/)
             id = match && match[1] ? match[1] : null
+
         }
         
 
         if (type === "Media") {
+
             push(`video/${id}`)
 
         }

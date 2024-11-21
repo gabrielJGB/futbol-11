@@ -29,7 +29,7 @@ const Home = () => {
 
   const _fetchAllLeagues = (load) => {
 
-    console.log(`Fetching date games.. ${selectedDate}, ${++i}`);
+    console.log(`Fetching date games.. ${new Date()}, ${++i}`);
     setLoading(load)
 
     fetchAllLeagues(formatedDate)
@@ -64,60 +64,43 @@ const Home = () => {
       // push("team/5?season=2024")
       // push("league/arg.1")
       // push("player/380084")
-      
-      let intervalId,timeoutId;
 
-      if (gamePlaying(leagues)){
+      let intervalId, timeoutId;
+
+      if (gamePlaying(leagues)) {
         _fetchAllLeagues(true)
       }
 
-      
+
       if (isSameDay(selectedDate, new Date())) {
-        
+
+        _fetchAllLeagues(false)
+        _fetchAllLeagues(false)
         _fetchAllLeagues(true)
-        timeoutId = setTimeout(() => {
-          
-          _fetchAllLeagues(false)
-          _fetchAllLeagues(false)
-          _fetchAllLeagues(false)
-        }, 3000);
+
 
 
         intervalId = setInterval(() => {
           _fetchAllLeagues(false)
-          
-
-          if (gamePlaying(leagues)) {
-            
-            timeoutId = setTimeout(() => {
-            
-              _fetchAllLeagues(false)
-              _fetchAllLeagues(false)
-            }, 3000);
-  
-          }
-
-        }, 1000 * 30)
+        }, 1000 * 20)
 
         return () => {
           clearInterval(intervalId)
           clearTimeout(timeoutId)
+          setLeagues(null)
         }
 
       } else {
         clearInterval(intervalId)
         setShowOnlyPlaying(false)
+        
       }
     }, [selectedDate]))
 
 
 
   useEffect(() => {
-    setLeagues(false)
-
     _fetchAllLeagues(true)
-    
-
   }, [selectedDate])
 
 
